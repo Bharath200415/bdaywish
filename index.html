@@ -165,7 +165,21 @@
   window.addEventListener('load', () => {
     const music = document.getElementById('background-music');
     music.muted = false; // Unmute programmatically
+
+    // Ensure audio restarts if it stops
+    music.addEventListener('ended', () => {
+      music.currentTime = 0; // Reset to the start
+      music.play(); // Play again
+    });
+
+    // In case playback doesn't start due to browser autoplay restrictions
+    if (music.paused) {
+      music.play().catch(error => {
+        console.error('Audio playback failed:', error);
+      });
+    }
   });
 </script>
+
 
 </html>
