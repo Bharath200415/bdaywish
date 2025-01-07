@@ -153,33 +153,48 @@
       <p class="last-smile" data-node-name="outroSmiley">:)</p>
     </div>
   </div>
+  <button id="play-music" style="display: none;">
+    🎵 Play Music
+  </button>
   <audio id="background-music" autoplay loop muted preload="auto">
-  <source src="https://bharath200415.github.io/bdaywish/audio/Ocean.mp3" type="audio/mp3">
-  Your browser does not support the audio element.
+    <source src="audio/oceantrim.mp3" type="audio/mp3">
+    Your browser does not support the audio element.
   </audio>
 </body>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.20.3/TweenMax.min.js"></script>
-<script type="application/javascript" src="script/main.js"></script>
 <script>
-  window.addEventListener('load', () => {
+  window.addEventListener('load',()=>{
     const music = document.getElementById('background-music');
-    music.muted = false; // Unmute programmatically
+    const playButton = document.getElementById('play-music');
 
-    // Ensure audio restarts if it stops
-    music.addEventListener('ended', () => {
-      music.currentTime = 0; // Reset to the start
-      music.play(); // Play again
+    music.muted = false;
+    music.load();
+    music.play().catch(error=>{
+      console.warn('Autoplay failed. User interaction required.');
+      playButton.style.display = 'block'; 
     });
 
-    // In case playback doesn't start due to browser autoplay restrictions
-    if (music.paused) {
-      music.play().catch(error => {
-        console.error('Audio playback failed:', error);
-      });
-    }
+    playButton.addEventListener('click', ()=>{
+      music.play()
+        .then(() => {
+          playButton.style.display = 'none'; 
+          console.log('Audio playback started.');
+        })
+        .catch(error => {
+          console.error('Audio playback failed:', error);
+        });
+    });
+
+    music.addEventListener('ended', ()=>{
+      music.currentTime = 0;
+      music.play();
+    });
+
+    console.log('Audio paused:', music.paused);
   });
 </script>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.20.3/TweenMax.min.js"></script>
+<script type="application/javascript" src="script/main.js"></script>
 
 </html>
